@@ -1,5 +1,8 @@
 # pokeshiri
 python slackbot ポケモンの名前でしりとり
+python知識ゼロからポケモンの名前でしりとりするslackbotを作ったノウハウのすべて  
+https://qiita.com/wagase/items/24eada2db8467119c458
+
 
 
 # こんなのです
