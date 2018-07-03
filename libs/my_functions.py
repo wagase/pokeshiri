@@ -26,11 +26,9 @@ def makekanalistNotnn():
 	kanalist = {}
 	for i in range(1,len(KATAKANA)+1):
 		kanas = []
-		j = 1
 		for key in POKENAMELIST:
 			if left(POKENAMELIST[key],1) == mid(KATAKANA,i,1) and right(POKENAMELIST[key],1) != "ン" :
 				kanas.append(POKENAMELIST[key])
-				j = j +1
 		kanalist[mid(KATAKANA,i,1)] = kanas
 	return kanalist
 
@@ -39,11 +37,9 @@ def makekanalistGetnn():
 	kanalist = {}
 	for i in range(1,len(KATAKANA)+1):
 		kanas = []
-		j = 1
 		for key in POKENAMELIST:
 			if left(POKENAMELIST[key],1) == mid(KATAKANA,i,1) and right(POKENAMELIST[key],1) == "ン" :
 				kanas.append(POKENAMELIST[key])
-				j = j +1
 		kanalist[mid(KATAKANA,i,1)] = kanas
 	return kanalist
 
@@ -98,6 +94,9 @@ def shiritori(req):
 # 末尾の文字を調整する
 def getshiri(req):
 	shiri = right(req,1)
+	# 長音対策
+	if shiri == "ー" :
+		shiri = mid(req,len(req)-1,1)
 	# ミミッキュ対策
 	if shiri in "ァィゥェォッャュョヮヵヶ" :
 		shiri = shiri.replace("ァ","ア")
@@ -112,9 +111,6 @@ def getshiri(req):
 		shiri = shiri.replace("ヮ","ワ")
 		shiri = shiri.replace("ヵ","カ")
 		shiri = shiri.replace("ヶ","ケ")
-	# 長音対策
-	if shiri == "ー" :
-		shiri = mid(req,len(req)-1,1)
 	return shiri
 
 # 一度いったやつはストックから消す
@@ -221,3 +217,4 @@ remarkstock=[]
 reqstock =[]
 lastWord =""
 penalty =0
+
