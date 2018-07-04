@@ -97,8 +97,8 @@ def getshiri(req):
 	# 長音対策
 	if shiri == "ー" :
 		shiri = mid(req,len(req)-1,1)
-	# ミミッキュ対策
-	if shiri in "ァィゥェォッャュョヮヵヶ" :
+	# 小文字と ポリゴン ニドラン対策
+	if shiri in "ァィゥェォッャュョヮヵヶ2Z♂♀" :
 		shiri = shiri.replace("ァ","ア")
 		shiri = shiri.replace("ィ","イ")
 		shiri = shiri.replace("ゥ","ウ")
@@ -111,8 +111,12 @@ def getshiri(req):
 		shiri = shiri.replace("ヮ","ワ")
 		shiri = shiri.replace("ヵ","カ")
 		shiri = shiri.replace("ヶ","ケ")
-	return shiri
+		shiri = shiri.replace("2","ツ")
+		shiri = shiri.replace("Z","ト")
+		shiri = shiri.replace("♂","ス")
+		shiri = shiri.replace("♀","ス")
 
+	return shiri
 # 一度いったやつはストックから消す
 def delstock(kana,val):
 	stock[kana].remove(val)
