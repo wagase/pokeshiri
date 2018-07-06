@@ -43,6 +43,17 @@ def makekanalistGetnn():
 		kanalist[mid(KATAKANA,i,1)] = kanas
 	return kanalist
 
+# 辞書{'ア': ['スピアー', 'ラフレシア', 'ルギア',....],'イ': ['ガーディ', 'ウインディ', 'ケーシィ',...].....} の形にする
+def makeshirikanalist():
+	kanalist = {}
+	for i in range(1,len(KATAKANA)+1):
+		kanas = []
+		for key in POKENAMELIST:
+			if getshiri(POKENAMELIST[key]) == mid(KATAKANA,i,1) :
+				kanas.append(POKENAMELIST[key])
+		kanalist[mid(KATAKANA,i,1)] = kanas
+	return kanalist
+
 # makekanalistNotnnのリストから指定した文字で始まるポケモンを適当に選ぶ
 def pokechoice(kana):
 	val =""
@@ -59,6 +70,7 @@ def pokechoice(kana):
 		memorylastword(val)
 		reqstockappend(val)
 		delstock(kana,val)
+		delshiristock(getshiri(val),val)
 		rest = len(stock[kana])
 		memoryRemark(val)
 		val = val + "・・・【"+kana+"】のこり【"+str(rest)+"】" + "次のことばは【"+getshiri(val)+"】です"
@@ -89,6 +101,7 @@ def shiritori(req):
 	else :
 		if req in stock[atama]:
 			delstock(atama,req)
+			delshiristock(shiri,req)
 		return pokechoice(shiri)
 
 # 末尾の文字を調整する
@@ -125,6 +138,10 @@ def delstock(kana,val):
 def delnstock(kana,val):
 	nstock[kana].remove(val)
 
+# 一度いったやつはストックから消す
+def delshiristock(kana,val):
+	shiristock[kana].remove(val)
+
 # 一度言われたやつを覚える
 def reqstockappend(req):
 	reqstock.append(req)
@@ -149,10 +166,12 @@ def reset():
 	global lastWord
 	global reqstock
 	global penalty 
+	global shiristock
 	penalty = 0
 	lastWord =""
 	stock = makekanalistNotnn()
 	nstock = makekanalistGetnn()
+	shiristock = makeshirikanalist()
 	reqstock.clear()
 
 # ヒント
@@ -161,6 +180,15 @@ def hint(req):
 	if req in stock:
 		penalty = penalty + 1
 		return stock[req]
+	else:
+		return "カタカナ一文字でお願いします"
+
+# しりヒント
+def shirihint(req):
+	global penalty
+	if req in shiristock:
+		penalty = penalty + 1
+		return shiristock[req]
 	else:
 		return "カタカナ一文字でお願いします"
 
@@ -207,7 +235,19 @@ def remarkRanking():
 		ret = ret + str(item[0]) + "　" + str(item[1]) + "回"+ "\n"
 	return ret
 
-
+# XではじまってYで終わるやつをピックする。「ル」攻めなどに使う用
+def atack(x,y):
+	global penalty
+	ret = []
+	if x in stock:
+		for item in stock[x]:
+			if getshiri(item) == y :
+				penalty = penalty + 2
+				ret.append(item)
+	# pythonのlistは、空であればFalse
+	if ret :
+		return ret
+	return x+"で始まって"+y+"で終わるポケモンはもういないよ"
 
 # 定数群
 KATAKANA = "アイウエオカガキギクグケゲコゴサザシジスズセゼソゾタダチヂツヅテデトドナニヌネノハバパヒビピフブプヘベペホボポマミムメモヤユヨラリルレロワヲンヴ"
@@ -217,8 +257,8 @@ POKENAMELIST = getpokenamelist()
 # 変数群
 stock = makekanalistNotnn()
 nstock = makekanalistGetnn()
+shiristock = makeshirikanalist()
 remarkstock=[]
 reqstock =[]
 lastWord =""
 penalty =0
-

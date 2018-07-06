@@ -19,14 +19,16 @@ class Counter:
 
 
 class count:
-    main    = Counter("総実行回数")
-    reset   = Counter("総リセット回数")
-    hint    = Counter("総ヒント回数")
-    detail  = Counter("総詳細表示回数")
-    ranking = Counter("総ランキング表示回数")
-    notpoke = Counter("総ポケモンじゃなくね？回数")
-    normal  = Counter("総しりとり成立回数")
-    error   = Counter("総しりとり不成立回数")
+    main      = Counter("総実行回数")
+    reset     = Counter("総リセット回数")
+    hint      = Counter("総ヒント回数")
+    shirihint = Counter("総裏ヒント回数")
+    atack     = Counter("総アタック回数")
+    detail    = Counter("総詳細表示回数")
+    ranking   = Counter("総ランキング表示回数")
+    notpoke   = Counter("総ポケモンじゃなくね？回数")
+    normal    = Counter("総しりとり成立回数")
+    error     = Counter("総しりとり不成立回数")
 
 
 def reset(message):
@@ -36,7 +38,7 @@ def reset(message):
 
 
 def statistics(message):
-    for counter in (count.main, count.reset, count.hint, count.detail,
+    for counter in (count.main, count.reset, count.hint,count.shirihint,count.atack,count.detail,
                     count.ranking, count.notpoke, count.normal, count.error):
         message.send("[" + str(counter.count) + "] ：" + counter.name)
 
@@ -51,6 +53,15 @@ def hint(name, message):
     hint = my_functions.hint(name[:1])
     message.send(str(hint))
 
+def shirihint(name, message):
+    count.shirihint.up()
+    shirihint = my_functions.shirihint(name[:1])
+    message.send(str(shirihint))
+
+def atack(name, message):
+    count.atack.up()
+    atack = my_functions.atack(name[:1],name[-1:])
+    message.send(str(atack))
 
 def detail(name, message):
     count.detail.up()
@@ -93,6 +104,8 @@ match_functions = {
 
 starts_functions = {
     ("ヒント｜", "ヒント|", "hint"): hint,
+    ("しりヒント｜", "しりヒント|","裏ヒント｜","裏ヒント|","shirihint"): shirihint,
+	("アタック｜","アタック|","atack"): atack,
     ("詳細｜", "詳細|"): detail,
 }
 
