@@ -2,6 +2,8 @@
 import json
 import random
 import collections
+import pprint
+import ast
 
 
 def mid(text,s,e):
@@ -198,8 +200,15 @@ def getpokedetail(req):
 	for key in POKEDATA:
 		if key["name"] == req :
 			ret = ret + str(key) + "\n"
-	return ret
+	return deteal_formating(ret)
 
+# 詳細の文字列を整列化する
+def deteal_formating(moji):
+        ret = ast.literal_eval(moji)
+        ret = pprint.pformat(ret)
+        ret = ret.replace("{","").replace("}","")
+        return ret
+        
 # 最後の文字を覚える
 def memorylastword(req):
 	global lastWord
